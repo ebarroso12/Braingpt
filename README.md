@@ -11,6 +11,14 @@ Reunir código, identidade, configuração de exemplo, testes e documentação e
 Nome oficial: **Braingpt**.
 Repositório canônico: https://github.com/ebarroso12/Braingpt.
 
+## O agente que este projeto deve consolidar
+
+Assistente executivo pessoal pelo WhatsApp em linguagem natural: agenda, e-mails, Drive e documentos, tarefas e lembretes, finanças, plantões, reescrita e encaminhamento a módulos separados de clínica e outros agentes. Mudanças exigem as confirmações definidas; monitoramento sem novidades deve permanecer silencioso.
+
+O proprietário recuperou uma descrição funcional de uma versão proposta via Evolution API. Ela declara pendentes o backend, webhook, modelo, memória, integrações, confirmações e testes. Não há evidência de que essa versão já esteja implantada.
+
+Leia o [escopo funcional recuperado](docs/ESCOPO-DO-AGENTE.md). A instalação anterior por ponte Codex e a proposta Evolution precisam ser reconciliadas a partir do código original.
+
 ## Onde está a implementação existente
 
 O relatório de inspeção fornecido pelo proprietário identificou:
