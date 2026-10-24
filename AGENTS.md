@@ -18,6 +18,8 @@ O proprietário forneceu a especificação e o handoff completos, arquivados com
 
 Comandos: `npm ci --ignore-scripts`, `npm run typecheck`, `npm test`. Node 24.13+ da série 24. Nenhuma chave OpenAI ou instância Evolution real é necessária para os testes locais.
 
+O proprietário escolheu reutilizar a chave OpenAI existente. Não criar outra nem pedir seu valor no chat. O modo opcional de agente lê credenciais do ambiente privado na implantação; modelo, memória cifrada e confirmação já têm implementação. Leia docs/MODELO-E-MEMORIA.md. Não alegue que a chave foi conectada ou testada ao vivo: ela não estava disponível nesta sessão. Não habilite ferramentas de domínio sem conector, permissão e validação.
+
 ## Como continuar sem perder o projeto
 
 1. Leia README.md e docs/RECUPERACAO.md; inspecione a origem e suas instruções locais.

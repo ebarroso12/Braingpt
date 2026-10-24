@@ -4,7 +4,7 @@
 
 Backend Node 24, sem dependências de execução npm, com HTTP, fetch e SQLite nativos. O TypeScript é executado pelo suporte nativo do Node; `npm run typecheck` usa TypeScript e tipos Node como dependências de desenvolvimento. Não há etapa de compilação.
 
-O backend só recebe texto e envia uma resposta fixa: o canal está em validação e modelo/ferramentas ainda não estão conectados. Não executa shell, agenda, e-mail, finanças ou ações clínicas. Não é o agente completo pronto.
+No modo padrão `transport`, o backend só recebe texto e envia resposta fixa de validação. No modo `openai`, usa o modelo e o contexto/memória descritos em [MODELO-E-MEMORIA.md](MODELO-E-MEMORIA.md). Não executa shell, agenda, e-mail, finanças ou ações clínicas. Não é o assistente com todos os conectores pronto.
 
 ## Instalação local
 
@@ -41,7 +41,7 @@ O formato e a autenticação foram testados contra uma fixture local, não contr
 
 ## Persistência e estados
 
-SQLite mantém apenas referências HMAC, estados e timestamps; nesta fase não guarda telefones, conteúdo recebido ou memória pessoal. A auditoria não armazena corpo ou headers. O número só existe em memória durante o envio.
+As tabelas de transporte guardam referências HMAC, estados e timestamps. No modo de agente, histórico curto, preferências aprovadas e propostas são guardados cifrados em tabelas separadas; veja MODELO-E-MEMORIA.md. A auditoria não armazena corpo ou headers. O número do remetente só é usado em memória durante o envio.
 
 Estados: `processing` (reserva), `sending` (chamada iniciada), `accepted` (Evolution retornou identificador válido para o destinatário esperado), `uncertain` (falha/timeout/retorno sem evidência suficiente). **Accepted não significa entregue ou lido no WhatsApp.**
 
@@ -57,7 +57,7 @@ O Dockerfile e compose são fornecidos como configuração de implantação; a e
 
 ## Desligamento, backup e retorno
 
-- Node: envie SIGTERM ao processo; ele para de aceitar conexões e aguarda as requisições em andamento. Há prazo de 20 s para saída.
+- Node: envie SIGTERM ao processo; ele para de aceitar conexões e aguarda as requisições em andamento. O prazo inclui os timeouts configurados de modelo e Evolution, mais 15 segundos.
 - Docker: `docker compose stop`. Para retornar, `docker compose start` com a mesma configuração e volume.
 - Não use `docker compose down -v`: isso remove o estado persistente.
 - Faça backup com o processo parado e copie o diretório de dados completo, incluindo arquivos SQLite auxiliares. Guarde o backup em armazenamento privado.
@@ -66,4 +66,4 @@ O Dockerfile e compose são fornecidos como configuração de implantação; a e
 
 ## Próximas fases
 
-Integrar modelo escolhido, perfil e memória aprovada, ferramentas somente leitura, confirmação estruturada e só depois escrita. Adicionar áudio/documentos com transcrição/extração antes da interpretação. Preservar escopos independentes para pessoal, clínica e delegação. Ver docs/ESCOPO-DO-AGENTE.md e docs/fontes/PROJETO-EVOLUTION.md.
+Validar o modelo escolhido e a instância Evolution reais; implementar ferramentas somente leitura e depois escrita com confirmação estruturada. Modelo, contexto cifrado e confirmações de preferências já foram implementados com testes simulados. Adicionar áudio/documentos com transcrição/extração antes da interpretação. Preservar escopos independentes para pessoal, clínica e delegação. Ver ESCOPO-DO-AGENTE.md e fontes/PROJETO-EVOLUTION.md.

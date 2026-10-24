@@ -13,6 +13,9 @@ export interface Config {
   timezone: string;
   timeoutMs: number;
   rateLimit: number;
+  agentMode: 'transport' | 'openai';
+  model?: { apiKey: string; model: string; timeoutMs: number };
+  stateEncryptionKey?: string;
 }
 
 export function loadConfig(env: Record<string, string | undefined> = process.env): Config {
@@ -44,6 +47,15 @@ export function loadConfig(env: Record<string, string | undefined> = process.env
   const timezone = env.TIMEZONE || 'America/Sao_Paulo';
   try { new Intl.DateTimeFormat('pt-BR', { timeZone: timezone }); }
   catch { throw new Error('Configuração inválida: TIMEZONE'); }
+  const agentMode = env.AGENT_MODE || 'transport';
+  if (agentMode !== 'transport' && agentMode !== 'openai') throw new Error('Configuração inválida: AGENT_MODE');
+  let model: Config['model'];
+  let stateEncryptionKey: string | undefined;
+  if (agentMode === 'openai') {
+    model = { apiKey: required('OPENAI_API_KEY'), model: required('OPENAI_MODEL'), timeoutMs: integer('OPENAI_TIMEOUT_MS', 20000, 100, 30000) };
+    stateEncryptionKey = required('STATE_ENCRYPTION_KEY');
+    if (Buffer.from(stateEncryptionKey, 'base64').length !== 32 || Buffer.from(stateEncryptionKey, 'base64').toString('base64') !== stateEncryptionKey) throw new Error('Configuração inválida: STATE_ENCRYPTION_KEY');
+  }
   return {
     baseUrl: url.toString().replace(/\/+$/, ''), apiKey: required('EVOLUTION_API_KEY'), instance,
     webhookSecret: required('EVOLUTION_WEBHOOK_SECRET', 32), senderHashSalt: required('SENDER_HASH_SALT', 32),
@@ -51,5 +63,6 @@ export function loadConfig(env: Record<string, string | undefined> = process.env
     host: env.HOST || '127.0.0.1', port: integer('PORT', 3030, 1, 65535), timezone,
     timeoutMs: integer('EVOLUTION_TIMEOUT_MS', 10000, 20, 60000),
     rateLimit: integer('RATE_LIMIT_PER_MINUTE', 20, 1, 1000),
+    agentMode, model, stateEncryptionKey,
   };
 }

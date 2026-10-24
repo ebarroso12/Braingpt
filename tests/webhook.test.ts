@@ -169,3 +169,27 @@ test('a chunked oversized body returns 413 instead of dropping the connection', 
   assert.equal(status, 413);
   assert.equal(s.evo.requests.length, 0);
 });
+
+test('agent mode uses the model and sends its answer through Evolution without exposing the key', async t => {
+  const temp = await tempDir();
+  const evo = await evolutionFixture();
+  const apiKey = 'private-test-openai-key';
+  const modelCalls: any[] = [];
+  const config = loadConfig({ ...configEnv(evo.url, join(temp.dir, 'agent.sqlite')), AGENT_MODE: 'openai',
+    OPENAI_API_KEY: apiKey, OPENAI_MODEL: 'test-model', STATE_ENCRYPTION_KEY: Buffer.alloc(32, 7).toString('base64') });
+  const backend = createBackend(config, { log: () => {}, modelFetch: async (_url, options) => {
+    modelCalls.push(JSON.parse(String(options?.body)));
+    return new Response(JSON.stringify({ status: 'completed', output: [{ type: 'message', content: [{ type: 'output_text', text: 'Bom dia, Dr. Edson.' }] }] }));
+  } });
+  const url = await listen(backend.server);
+  t.after(async () => { await backend.close(); await evo.close(); await temp.cleanup(); });
+  const r = await fetch(`${url}/webhooks/evolution`, { method: 'POST', headers: { 'x-webhook-secret': secret, 'content-type': 'application/json' }, body: JSON.stringify(event()) });
+  assert.equal(r.status, 200);
+  assert.equal(evo.requests[0].body.text, 'Bom dia, Dr. Edson.');
+  assert.equal(modelCalls.length, 1);
+  assert.doesNotMatch(JSON.stringify(modelCalls), new RegExp(apiKey));
+  const health = await (await fetch(`${url}/health`)).json() as any;
+  assert.equal(health.stage, 'agent');
+  assert.equal(health.modelConfigured, true);
+  assert.equal(health.modelConnected, false);
+});

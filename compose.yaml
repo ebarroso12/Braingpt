@@ -19,6 +19,6 @@ services:
     read_only: true
     tmpfs:
       - /tmp
-    stop_grace_period: 25s
+    stop_grace_period: 65s
 volumes:
   braingpt-data:

@@ -24,3 +24,16 @@ for (const [name, patch] of [
 ] as const) {
   test(`fails closed for ${name}`, () => assert.throws(() => loadConfig({ ...configEnv('https://evo.example', '/tmp/test.sqlite'), ...patch })));
 }
+
+test('openai mode requires the existing key, an explicit model and a state encryption key', () => {
+  const env = { ...configEnv('https://evo.example', '/tmp/test.sqlite'), AGENT_MODE: 'openai' };
+  assert.throws(() => loadConfig(env));
+  assert.throws(() => loadConfig({ ...env, OPENAI_API_KEY: 'synthetic-key', OPENAI_MODEL: 'test-model' }));
+  const cfg = loadConfig({ ...env, OPENAI_API_KEY: 'synthetic-key', OPENAI_MODEL: 'test-model', STATE_ENCRYPTION_KEY: Buffer.alloc(32, 7).toString('base64') });
+  assert.equal(cfg.agentMode, 'openai');
+  assert.equal(cfg.model?.model, 'test-model');
+});
+
+test('unknown agent mode does not silently fall back to transport', () => {
+  assert.throws(() => loadConfig({ ...configEnv('https://evo.example', '/tmp/test.sqlite'), AGENT_MODE: 'claude' }));
+});

@@ -2,7 +2,7 @@
 
 ## Estado desta entrega
 
-Primeiro backend Evolution implementado a partir da especificação e do handoff fornecidos pelo proprietário. Nome oficial Braingpt. O repositório contém código executável e documentação de continuidade.
+Backend Evolution e modo opcional de agente OpenAI implementados a partir da especificação e do handoff fornecidos pelo proprietário. Nome oficial Braingpt. O proprietário escolheu reutilizar uma chave existente, que será fornecida pelo ambiente privado na implantação; nenhuma chave real foi criada ou copiada aqui.
 
 **Ainda não é o assistente completo e não foi implantado no WhatsApp de produção.**
 
@@ -14,10 +14,12 @@ Primeiro backend Evolution implementado a partir da especificação e do handoff
 - [x] SQLite, reserva atômica, rate limit por remetente e auditoria sem dados brutos.
 - [x] Adapter Evolution, validação de retorno e tratamento de timeout sem retry cego.
 - [x] Testes de reentrega, reinício, concorrência entre processos e envios incertos.
-- [x] Resposta fixa de diagnóstico que informa os recursos ainda não conectados.
+- [x] Modo de transporte com resposta fixa e modo opcional de agente com modelo configurado explicitamente.
+- [x] Contexto curto cifrado e preferências pessoais enumeradas, isolados por conversa.
+- [x] Propostas de lembrar/esquecer preferências, com confirmação humana expiráveis e de uso único.
 - [x] Arquivos de origem sanitizados, instruções para agentes, instalação e desligamento.
-- [x] 48 testes passando e verificação estática TypeScript passando.
-- [x] Revisão independente do backend de transporte sem achados críticos ou importantes.
+- [x] 72 testes passando e verificação estática TypeScript passando.
+- [x] Revisão independente do transporte e do agente; três achados de memória/expiração corrigidos com regressões que falharam antes da correção e passaram depois.
 
 Comandos: `npm run typecheck` e `npm test`. Os testes usam servidor HTTP local simulando a Evolution, remetentes sintéticos e segredos exclusivos de teste. Não acessam contas ou instâncias reais.
 
@@ -26,10 +28,10 @@ Comandos: `npm run typecheck` e `npm test`. Os testes usam servidor HTTP local s
 - [ ] Build e execução Docker no host de destino (configuração fornecida, ainda não validada em execução).
 - [ ] Confirmação do contrato/autenticação na versão real da Evolution instalada.
 - [ ] Conexão controlada a uma instância WhatsApp e validação ponta a ponta real.
-- [ ] Modelo de conversa.
-- [ ] Memória de perfil, memória durável aprovada e histórico curto.
+- [ ] Teste real com a chave existente e o modelo escolhido; adapter e ciclo de conversa já implementados com teste simulado.
+- [ ] Expansão da memória para fatos além das preferências enumeradas e escopos adicionais com políticas próprias.
 - [ ] Ferramentas Calendar, Gmail, Drive, Tasks e demais domínios.
-- [ ] Pendências e confirmações humanas estruturadas para ações de domínio.
+- [ ] Confirmações para ações de domínio (as de memória pessoal já estão implementadas).
 - [ ] Áudio, imagem e documentos.
 - [ ] Automações silenciosas e encaminhamento a agentes com conectores reais.
 
@@ -46,10 +48,11 @@ Não afirmar estado atual dos serviços antigos a partir de inventários histór
 - Foi implementada a primeira tarefa expressamente recomendada pelo handoff, em vez de aguardar o código antigo inacessível. O custo é precisar comparar/recuperar recursos úteis daquele sistema depois; não há alegação de importação completa.
 - Node 24 executa TypeScript e SQLite nativamente. Dependências de desenvolvimento servem à checagem de tipos, sem dependências npm em execução.
 - Reserva durável sem retry automático prioriza evitar duplicação. Um crash pode deixar uma resposta sem envio; isso está registrado e exige investigação, não promessa de exatamente uma entrega.
-- Sem modelo ou ferramentas nesta fase, as mensagens recebem um aviso fixo e honesto. Não se deve disponibilizar esta etapa como assistente completo ao usuário final.
+- O modo de transporte mantém aviso fixo. O modo de agente conversa pelo modelo configurado e só tem ferramentas de memória pessoal controlada; não se deve apresentá-lo como assistente com todos os conectores.
+- Memória durável livre foi restringida a preferências enumeradas para impedir que diagnósticos ou credenciais sejam gravados por esse caminho. Esquecer uma preferência também limpa o contexto curto. A expiração da confirmação é verificada após obter o bloqueio SQLite.
 
 ## Próxima etapa
 
-Validar o transporte com uma instância controlada, sem modificar uma produção existente. Depois conectar o modelo escolhido e implementar memória e ferramentas por escopo, começando por leitura e só depois escrita com confirmação. Antes de qualquer implantação real, confirmar configuração, impacto e autorização, conforme o handoff.
+Disponibilizar acesso privado ao servidor e à configuração existente, validar o modelo escolhido e o transporte com uma instância controlada. Depois implementar os conectores reais por escopo, começando por leitura e só depois escrita com confirmação. A autorização de implementação foi dada; os acessos privados ainda não estão disponíveis nesta sessão. Ver [MODELO-E-MEMORIA.md](MODELO-E-MEMORIA.md).
 
 Não publicar credenciais, telefones, memória pessoal, sessões ou histórico bruto. O repositório é público.

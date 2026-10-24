@@ -2,7 +2,7 @@
 
 Assistente executivo pessoal para WhatsApp, com backend independente e Evolution API como transporte. Nome oficial: **Braingpt**.
 
-**Estado: primeira entrega implementada — transporte autenticado e testado. Ainda não é o agente completo nem está conectado ao WhatsApp de produção.**
+**Estado: transporte e modo de agente implementados e testados com provedores simulados. Ainda não está conectado ao WhatsApp de produção nem possui todos os conectores.**
 
 Este repositório é o ponto central de código, especificações, instalação, testes e continuidade: https://github.com/ebarroso12/Braingpt.
 
@@ -18,9 +18,11 @@ Este repositório é o ponto central de código, especificações, instalação,
 - Tratamento de envios incertos sem reenvio cego ou falso sucesso.
 - Logs sem corpo de mensagens, números, headers ou erros brutos do provedor.
 - Testes HTTP com Evolution simulada, verificação de tipos e CI.
+- Modo opcional OpenAI com chave existente no ambiente privado e ciclo limitado de ferramentas.
+- Contexto cifrado e memória de preferências pessoais enumeradas, com confirmação humana, prazo de validade e consumo único.
 - Exemplos de configuração e implantação isolada em Docker, ainda sem execução Docker validada.
 
-A resposta atual é fixa e informa que o modelo e as ferramentas ainda não estão conectados. Não há chamada à OpenAI nem execução de agenda, e-mail, tarefas ou finanças nesta fase.
+Em `AGENT_MODE=transport`, a resposta é fixa e não chama modelo. Em `AGENT_MODE=openai`, o agente usa a chave existente e o modelo configurados no servidor. Os testes usam provedor simulado; não houve chamada real à conta OpenAI nesta entrega. Agenda, e-mail, tarefas, finanças e clínica ainda não estão conectados. Veja [modelo, memória e configuração](docs/MODELO-E-MEMORIA.md).
 
 ## Início rápido
 
@@ -53,7 +55,7 @@ docs/                      fontes, operação, plano e checkpoints
 
 Agenda, e-mails, Drive/documentos, tarefas/lembretes, finanças, plantões, reescrita e encaminhamento a módulos separados de clínica e outros agentes. Alterações exigem confirmação humana; nenhuma operação pode ser declarada concluída sem retorno real; monitoramento sem novidade deve permanecer silencioso.
 
-Essas capacidades estão [especificadas](docs/ESCOPO-DO-AGENTE.md), mas dependem das próximas fases: modelo, memória aprovada, ferramentas de leitura, confirmação estruturada e ferramentas de escrita. Consulte o [checkpoint atual](docs/STATUS.md).
+Essas capacidades estão [especificadas](docs/ESCOPO-DO-AGENTE.md). Modelo, contexto cifrado e confirmações de memória já têm implementação; conectores de leitura e escrita, novos escopos e teste real continuam pendentes. Consulte o [checkpoint atual](docs/STATUS.md).
 
 ## De onde veio o projeto
 
