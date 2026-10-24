@@ -10,7 +10,13 @@ Não modificar o Kiro do OpenClaw, arquivos em /root/.openclaw ou serviços/conf
 
 ## Estado no início desta recuperação
 
-Este repositório contém documentação de recuperação, não o código executável original. Os detalhes em docs/RECUPERACAO.md são evidências relatadas por uma inspeção na máquina de origem; confirme-os antes de agir. Não alegue que o código foi importado, que testes passaram ou que produção foi atualizada sem verificar.
+Este repositório começou com documentação de recuperação e agora contém a primeira entrega do backend Evolution, implementada a partir dos documentos fornecidos pelo proprietário. Leia docs/STATUS.md para o estado atual. O código da instalação anterior em /srv não foi importado. Os detalhes em docs/RECUPERACAO.md são evidências relatadas por uma inspeção na máquina de origem; confirme-os antes de agir. Não alegue que o código antigo foi importado, que testes passaram ou que produção foi atualizada sem verificar.
+
+## Escopo mais recente
+
+O proprietário forneceu a especificação e o handoff completos, arquivados com dados de infraestrutura removidos em docs/fontes/. A primeira tarefa recomenda explicitamente implementar um backend novo, com saúde, webhook autenticado, idempotência e adapter Evolution, sem segredos reais e sem ferramentas de domínio. Isso autoriza a implementação nova e prevalece sobre a necessidade anterior de aguardar recuperação de código. Não apresente essa implementação como cópia ou reparo do serviço antigo. O nome do novo sistema é Braingpt.
+
+Comandos: `npm ci --ignore-scripts`, `npm run typecheck`, `npm test`. Node 24.13+ da série 24. Nenhuma chave OpenAI ou instância Evolution real é necessária para os testes locais.
 
 ## Como continuar sem perder o projeto
 

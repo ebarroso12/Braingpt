@@ -4,7 +4,7 @@
 
 O proprietário forneceu nesta conversa um texto intitulado “Projeto KIRO via Evolution API”, descrevendo o assistente executivo pessoal originalmente chamado KIRO. Este documento registra o conteúdo sob o nome oficial **Braingpt**.
 
-O texto afirma que as capacidades foram recuperadas do KIRO original e que a versão Evolution API ainda depende de implantação e conexão às ferramentas. Isso é uma descrição funcional fornecida, não uma comprovação de implementação. Não foi fornecida a URL do documento citado.
+O texto afirma que as capacidades foram recuperadas do KIRO original e que a versão Evolution API ainda depende de implantação e conexão às ferramentas. Isso é uma descrição funcional fornecida, não uma comprovação de implementação. Posteriormente, o proprietário forneceu os arquivos completos, arquivados com endereços privados removidos em [fontes/PROJETO-EVOLUTION.md](fontes/PROJETO-EVOLUTION.md) e [fontes/HANDOFF.md](fontes/HANDOFF.md). O estado da implementação nova está em [STATUS.md](STATUS.md).
 
 A instalação anterior relatada em docs/RECUPERACAO.md usa uma ponte Codex e socket local. A versão proposta via Evolution API é uma frente distinta, cuja relação com o código anterior precisa ser verificada. Não assumir que a Evolution já está instalada nem substituir a ponte atual sem inspeção e migração.
 

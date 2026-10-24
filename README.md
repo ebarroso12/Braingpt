@@ -1,55 +1,68 @@
 # Braingpt
 
-Projeto do agente pessoal integrado ao WhatsApp, originado de uma implementação independente criada pelo Codex com o nome Kiro.
+Assistente executivo pessoal para WhatsApp, com backend independente e Evolution API como transporte. Nome oficial: **Braingpt**.
 
-**Estado atual: recuperação e consolidação. O código executável do servidor ainda não foi importado neste repositório. Este repositório não é uma instalação funcional do agente.**
+**Estado: primeira entrega implementada — transporte autenticado e testado. Ainda não é o agente completo nem está conectado ao WhatsApp de produção.**
 
-## Objetivo
+Este repositório é o ponto central de código, especificações, instalação, testes e continuidade: https://github.com/ebarroso12/Braingpt.
 
-Reunir código, identidade, configuração de exemplo, testes e documentação em um único projeto rastreável, para que sua localização e funcionamento não dependam de uma conversa anterior.
+## O que já está implementado
 
-Nome oficial: **Braingpt**.
-Repositório canônico: https://github.com/ebarroso12/Braingpt.
+- Backend Node 24 e TypeScript, sem dependências de execução npm.
+- `GET /health`, identificando explicitamente a fase `transport-only`.
+- `POST /webhooks/evolution`, com segredo dedicado em header e limite de tamanho.
+- Filtro de instância, allowlist por HMAC do telefone e limite por remetente.
+- Ignora eventos técnicos/protocolo, mensagens próprias, grupos e mídia ainda não suportada.
+- SQLite persistente, reserva atômica e prevenção de respostas duplicadas, inclusive entre processos e após reinício.
+- Adapter de envio de texto pela Evolution v2, com timeout, sem redirects com credenciais e validação do identificador de saída.
+- Tratamento de envios incertos sem reenvio cego ou falso sucesso.
+- Logs sem corpo de mensagens, números, headers ou erros brutos do provedor.
+- Testes HTTP com Evolution simulada, verificação de tipos e CI.
+- Exemplos de configuração e implantação isolada em Docker, ainda sem execução Docker validada.
 
-## O agente que este projeto deve consolidar
+A resposta atual é fixa e informa que o modelo e as ferramentas ainda não estão conectados. Não há chamada à OpenAI nem execução de agenda, e-mail, tarefas ou finanças nesta fase.
 
-Assistente executivo pessoal pelo WhatsApp em linguagem natural: agenda, e-mails, Drive e documentos, tarefas e lembretes, finanças, plantões, reescrita e encaminhamento a módulos separados de clínica e outros agentes. Mudanças exigem as confirmações definidas; monitoramento sem novidades deve permanecer silencioso.
+## Início rápido
 
-O proprietário recuperou uma descrição funcional de uma versão proposta via Evolution API. Ela declara pendentes o backend, webhook, modelo, memória, integrações, confirmações e testes. Não há evidência de que essa versão já esteja implantada.
+```sh
+npm ci --ignore-scripts
+npm run typecheck
+npm test
+```
 
-Leia o [escopo funcional recuperado](docs/ESCOPO-DO-AGENTE.md). A instalação anterior por ponte Codex e a proposta Evolution precisam ser reconciliadas a partir do código original.
+Para executar o servidor, siga [instalação e operação](docs/OPERACAO.md): configure uma instância de teste, uma `.env` privada e a allowlist; depois execute `npm start`. Nenhuma chave real é incluída. As variáveis vazias impedem a inicialização.
 
-## Onde está a implementação existente
+## Estrutura
 
-O relatório de inspeção fornecido pelo proprietário identificou:
+```text
+app/
+  server.ts                inicialização e desligamento
+  backend.ts               endpoints e processamento
+  normalizer.ts            filtros dos eventos Evolution
+  config.ts                validação da configuração
+  security.ts              autenticação, HMAC e logs
+  store.ts                 reservas e auditoria SQLite
+  adapters/evolution.ts    envio de texto
+migrations/                schema persistente
+scripts/hash-phone.ts      geração local do HMAC da allowlist
+tests/                     testes automatizados
+docs/                      fontes, operação, plano e checkpoints
+```
 
-- Diretório de origem: `/srv/codex-whatsapp-workspace/kiro`.
-- Branch local: `feat/kiro-server`.
-- Pacote: `kiro-server`.
-- Serviço: `kiro-core.service`.
-- Primeiro commit relatado: `594b543`.
-- Entrada: ponte WhatsApp Codex, com duas instalações relatadas em `/opt/codex-whatsapp-relay` e `/opt/codex-whatsapp-relay-personal`.
+## O agente previsto
 
-Essas informações provêm do relatório da outra máquina. Nesta etapa, o código não pôde ser inspecionado diretamente. A branch e o commit relatados não foram localizados pela busca realizada no GitHub.
+Agenda, e-mails, Drive/documentos, tarefas/lembretes, finanças, plantões, reescrita e encaminhamento a módulos separados de clínica e outros agentes. Alterações exigem confirmação humana; nenhuma operação pode ser declarada concluída sem retorno real; monitoramento sem novidade deve permanecer silencioso.
 
-**Este projeto é independente do Kiro do OpenClaw. O proprietário determinou que o OpenClaw não seja alterado.**
+Essas capacidades estão [especificadas](docs/ESCOPO-DO-AGENTE.md), mas dependem das próximas fases: modelo, memória aprovada, ferramentas de leitura, confirmação estruturada e ferramentas de escrita. Consulte o [checkpoint atual](docs/STATUS.md).
 
-## O que o sistema faz hoje
+## De onde veio o projeto
 
-Segundo o relatório, recebe uma solicitação pela ponte WhatsApp, encaminha ao núcleo local, classifica o pedido e chama um executor Claude ou Codex. A resposta volta pela ponte.
+O proprietário recuperou a [especificação Evolution](docs/fontes/PROJETO-EVOLUTION.md) e o [handoff completo](docs/fontes/HANDOFF.md). Eles foram arquivados com endereços de infraestrutura removidos. A primeira tarefa recomendada por esses documentos foi implementada aqui sob o nome Braingpt.
 
-Isso demonstra uma integração com executores. Ainda é necessário examinar o código para comprovar ferramentas disponíveis, memória, planejamento, limites de autonomia, autorização e recuperação de falhas. Não há confirmação de um GPT personalizado na interface do ChatGPT.
+Separadamente, um relatório identificou uma instalação anterior criada pelo Codex em `/srv/codex-whatsapp-workspace/kiro`, com ponte WhatsApp Codex e serviço `kiro-core.service`. Esse sistema pode enviar mensagens mesmo sem a versão Evolution existir. O código dessa instalação anterior **não foi importado ou reparado nesta entrega**. O mapa e a evidência histórica estão em [RECUPERACAO.md](docs/RECUPERACAO.md).
 
-## Problemas relatados
-
-- Respostas repetidas a eventos `[protocolMessage]`.
-- Falha genérica `claude retornou erro (1)`, sem causa confirmada.
-- Avisos de falha duplicados.
-- Confusão entre o nome do agente independente e o agente do OpenClaw.
-- Falta de uma fonte de código e documentação centralizadas.
+**O Kiro do OpenClaw é separado e não foi alterado.** Não houve leitura de credenciais, migração de sessões, reinício de serviços existentes ou envio real ao seu WhatsApp.
 
 ## Continuidade
 
-Leia [o mapa e o plano de recuperação](docs/RECUPERACAO.md) e as [instruções para agentes](AGENTS.md).
-
-A próxima etapa é recuperar o código existente da máquina de origem, revisar os arquivos destinados ao repositório público, aplicar a identidade Braingpt e validar o funcionamento. Não reconstruir o sistema a partir deste resumo como se fosse o código original.
+Comece por [AGENTS.md](AGENTS.md) e [docs/STATUS.md](docs/STATUS.md). Cada entrega deve atualizar o estado real do projeto e os testes, sem confundir especificação com capacidade disponível.

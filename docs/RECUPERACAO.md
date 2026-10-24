@@ -1,6 +1,10 @@
 # Recuperação e consolidação do Braingpt
 
-## Checkpoint
+## Atualização após recebimento do handoff
+
+O proprietário forneceu a especificação e o handoff completos da proposta Evolution. Uma implementação nova da primeira tarefa foi criada como Braingpt, sem importar ou alterar o código da instalação anterior descrita abaixo. Consulte [STATUS.md](STATUS.md) para o estado atual e [fontes/HANDOFF.md](fontes/HANDOFF.md) para o contexto sanitizado. As afirmações seguintes registram a investigação inicial e não devem ser confundidas com o estado da nova implementação.
+
+## Checkpoint histórico da investigação inicial
 
 - Identidade definida pelo proprietário: **Braingpt**.
 - Destino autorizado: https://github.com/ebarroso12/Braingpt.
