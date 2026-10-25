@@ -2,6 +2,8 @@
 
 ## Estado desta entrega
 
+**Direção atual:** integrar na ponte WhatsApp Codex já usada ao escrever para si mesmo. Não migrar o canal para Evolution. Adaptador e launcher preparados; aplicação na VPS ainda pendente por falta de acesso ao código instalado e ao servidor. Consulte [APLICAR-NA-PONTE-EXISTENTE.md](APLICAR-NA-PONTE-EXISTENTE.md).
+
 Backend Evolution e modo opcional de agente OpenAI implementados a partir da especificação e do handoff fornecidos pelo proprietário. Nome oficial Braingpt. O proprietário escolheu reutilizar uma chave existente, que será fornecida pelo ambiente privado na implantação; nenhuma chave real foi criada ou copiada aqui.
 
 **Ainda não é o assistente completo e não foi implantado no WhatsApp de produção.**
@@ -18,12 +20,18 @@ Backend Evolution e modo opcional de agente OpenAI implementados a partir da esp
 - [x] Contexto curto cifrado e preferências pessoais enumeradas, isolados por conversa.
 - [x] Propostas de lembrar/esquecer preferências, com confirmação humana expiráveis e de uso único.
 - [x] Arquivos de origem sanitizados, instruções para agentes, instalação e desligamento.
-- [x] 72 testes passando e verificação estática TypeScript passando.
+- [x] 86 testes passando e verificação estática TypeScript passando.
 - [x] Revisão independente do transporte e do agente; três achados de memória/expiração corrigidos com regressões que falharam antes da correção e passaram depois.
+- [x] Adaptador da ponte existente sem novas credenciais Evolution ou novo cliente WhatsApp.
+- [x] Tratamento de self-chat, envelopes de áudio, eco antes de ACK, timeout e drenagem dos lotes já aceitos, com testes de regressão.
+- [x] Revisão da integração contra a interface pública inspecionada; achados de envelopes de áudio e drenagem corrigidos com testes RED→GREEN.
 
 Comandos: `npm run typecheck` e `npm test`. Os testes usam servidor HTTP local simulando a Evolution, remetentes sintéticos e segredos exclusivos de teste. Não acessam contas ou instâncias reais.
 
 ## Não executado
+
+- [ ] Recuperação/importação do código antigo completo do servidor e comparação dos hooks modificados.
+- [ ] Aplicação e verificação ao vivo do adaptador na ponte Codex existente.
 
 - [ ] Build e execução Docker no host de destino (configuração fornecida, ainda não validada em execução).
 - [ ] Confirmação do contrato/autenticação na versão real da Evolution instalada.
@@ -53,6 +61,6 @@ Não afirmar estado atual dos serviços antigos a partir de inventários histór
 
 ## Próxima etapa
 
-Disponibilizar acesso privado ao servidor e à configuração existente, validar o modelo escolhido e o transporte com uma instância controlada. Depois implementar os conectores reais por escopo, começando por leitura e só depois escrita com confirmação. A autorização de implementação foi dada; os acessos privados ainda não estão disponíveis nesta sessão. Ver [MODELO-E-MEMORIA.md](MODELO-E-MEMORIA.md).
+Disponibilizar acesso ao ambiente que já executa a ponte, recuperar seu código e aplicar o procedimento de [APLICAR-NA-PONTE-EXISTENTE.md](APLICAR-NA-PONTE-EXISTENTE.md). Não iniciar uma segunda conexão sobre a mesma sessão nem trocar para Evolution. Depois integrar os conectores/executores antigos úteis com confirmação e escopos próprios. A autorização foi dada; os acessos privados não estão disponíveis nesta sessão.
 
 Não publicar credenciais, telefones, memória pessoal, sessões ou histórico bruto. O repositório é público.

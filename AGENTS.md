@@ -20,6 +20,12 @@ Comandos: `npm ci --ignore-scripts`, `npm run typecheck`, `npm test`. Node 24.13
 
 O proprietário escolheu reutilizar a chave OpenAI existente. Não criar outra nem pedir seu valor no chat. O modo opcional de agente lê credenciais do ambiente privado na implantação; modelo, memória cifrada e confirmação já têm implementação. Leia docs/MODELO-E-MEMORIA.md. Não alegue que a chave foi conectada ou testada ao vivo: ela não estava disponível nesta sessão. Não habilite ferramentas de domínio sem conector, permissão e validação.
 
+## Direção atual de integração
+
+O proprietário esclareceu que envia mensagens para si mesmo e já recebe respostas pela ponte Codex. Ele autorizou levar as atualizações a ESSA instalação. Esse é o caminho principal; não exigir migração para Evolution. Leia docs/APLICAR-NA-PONTE-EXISTENTE.md. `npm start` agora é o launcher da ponte atual; o servidor Evolution opcional fica em `npm run start:evolution`.
+
+A integração foi preparada e testada contra fixtures da interface pública inspecionada. A cópia modificada do servidor e o código antigo ainda não estão acessíveis aqui. Não declarar implantação, importação completa, reparo do executor Claude ou integração de todos os conectores sem evidência real. Preservar tarefas, filas, sessões e a única posse da conta WhatsApp durante o cutover. OpenClaw continua excluído.
+
 ## Como continuar sem perder o projeto
 
 1. Leia README.md e docs/RECUPERACAO.md; inspecione a origem e suas instruções locais.

@@ -1,4 +1,5 @@
 import { resolve } from 'node:path';
+import { loadModelSettings } from './agent/config.ts';
 
 export interface Config {
   baseUrl: string;
@@ -52,9 +53,7 @@ export function loadConfig(env: Record<string, string | undefined> = process.env
   let model: Config['model'];
   let stateEncryptionKey: string | undefined;
   if (agentMode === 'openai') {
-    model = { apiKey: required('OPENAI_API_KEY'), model: required('OPENAI_MODEL'), timeoutMs: integer('OPENAI_TIMEOUT_MS', 20000, 100, 30000) };
-    stateEncryptionKey = required('STATE_ENCRYPTION_KEY');
-    if (Buffer.from(stateEncryptionKey, 'base64').length !== 32 || Buffer.from(stateEncryptionKey, 'base64').toString('base64') !== stateEncryptionKey) throw new Error('Configuração inválida: STATE_ENCRYPTION_KEY');
+    ({ model, stateEncryptionKey } = loadModelSettings(env));
   }
   return {
     baseUrl: url.toString().replace(/\/+$/, ''), apiKey: required('EVOLUTION_API_KEY'), instance,

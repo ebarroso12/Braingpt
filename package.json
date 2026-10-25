@@ -1,6 +1,6 @@
 {
   "name": "braingpt",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "private": true,
   "type": "module",
   "description": "Backend independente do assistente Braingpt para Evolution API",
@@ -8,10 +8,12 @@
     "node": ">=24.13.0 <25"
   },
   "scripts": {
-    "start": "node --env-file-if-exists=.env app/server.ts",
+    "start": "node --env-file-if-exists=.env app/relay/launch.ts",
     "test": "node --test tests/*.test.ts",
     "typecheck": "tsc --noEmit",
-    "hash-phone": "node --env-file-if-exists=.env scripts/hash-phone.ts"
+    "hash-phone": "node --env-file-if-exists=.env scripts/hash-phone.ts",
+    "start:evolution": "node --env-file-if-exists=.env app/server.ts",
+    "start:relay": "node --env-file-if-exists=.env app/relay/launch.ts"
   },
   "devDependencies": {
     "@types/node": "^24.19.2",

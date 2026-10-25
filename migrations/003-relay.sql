@@ -1,0 +1,7 @@
+BEGIN IMMEDIATE;
+CREATE TABLE IF NOT EXISTS relay_outgoing (
+  id_hash TEXT PRIMARY KEY,
+  created_at INTEGER NOT NULL
+);
+PRAGMA user_version=3;
+COMMIT;

@@ -82,7 +82,7 @@ test('existing inbox data survives the agent schema migration without reopening 
   t.after(async () => { state.close(); await tmp.cleanup(); });
   const check = new DatabaseSync(path);
   assert.equal(check.prepare("SELECT status FROM messages WHERE id='old'").get()?.status, 'accepted');
-  assert.equal(check.prepare('PRAGMA user_version').get()?.user_version, 2);
+  assert.equal(check.prepare('PRAGMA user_version').get()?.user_version, 3);
   check.close();
 });
 

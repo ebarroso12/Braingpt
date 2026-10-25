@@ -1,5 +1,7 @@
 # Instalação e operação — fase de transporte
 
+Este documento trata do transporte **Evolution opcional**. Para o caminho principal com a ponte Codex já conectada, use [APLICAR-NA-PONTE-EXISTENTE.md](APLICAR-NA-PONTE-EXISTENTE.md). O início deste servidor agora usa `npm run start:evolution`; `npm start` carrega a ponte existente.
+
 ## O que esta entrega executa
 
 Backend Node 24, sem dependências de execução npm, com HTTP, fetch e SQLite nativos. O TypeScript é executado pelo suporte nativo do Node; `npm run typecheck` usa TypeScript e tipos Node como dependências de desenvolvimento. Não há etapa de compilação.
@@ -14,7 +16,7 @@ No modo padrão `transport`, o backend só recebe texto e envia resposta fixa de
 4. Configure uma instância Evolution v2 exclusiva para teste. Não altere uma instância já usada em produção.
 5. Configure o segredo próprio do webhook e o salt do remetente com valores aleatórios distintos de pelo menos 32 caracteres. O segredo do webhook NÃO é a API key global da Evolution.
 6. Execute `npm run hash-phone` no ambiente privado, informe o telefone com código do país e coloque o HMAC resultante em `ALLOWED_PHONE_HASHES`. É possível separar vários HMACs por vírgula. O salt usado pelo utilitário e pelo backend deve ser o mesmo.
-7. Execute `npm start`. Consulte `GET /health` pelo endereço interno.
+7. Execute `npm run start:evolution`. Consulte `GET /health` pelo endereço interno.
 
 As variáveis vazias, URL inadequada, salt/segredo curtos ou allowlist inválida impedem a inicialização. `DATABASE_PATH` deve apontar para armazenamento persistente privado. Backup e proteção do disco continuam sendo responsabilidade da implantação.
 

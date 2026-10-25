@@ -1,8 +1,10 @@
 # Braingpt
 
-Assistente executivo pessoal para WhatsApp, com backend independente e Evolution API como transporte. Nome oficial: **Braingpt**.
+Assistente executivo pessoal para WhatsApp. O caminho principal é a **ponte Codex já conectada**, preservando o uso de escrever para si mesmo. Evolution API é uma alternativa opcional. Nome oficial: **Braingpt**.
 
 **Estado: transporte e modo de agente implementados e testados com provedores simulados. Ainda não está conectado ao WhatsApp de produção nem possui todos os conectores.**
+
+A integração com a ponte existente foi preparada, mas ainda não foi aplicada na VPS. Leia [como aplicar na instalação atual](docs/APLICAR-NA-PONTE-EXISTENTE.md).
 
 Este repositório é o ponto central de código, especificações, instalação, testes e continuidade: https://github.com/ebarroso12/Braingpt.
 
@@ -21,8 +23,9 @@ Este repositório é o ponto central de código, especificações, instalação,
 - Modo opcional OpenAI com chave existente no ambiente privado e ciclo limitado de ferramentas.
 - Contexto cifrado e memória de preferências pessoais enumeradas, com confirmação humana, prazo de validade e consumo único.
 - Exemplos de configuração e implantação isolada em Docker, ainda sem execução Docker validada.
+- Adaptador para a sessão da ponte Codex existente: mensagens para si mesmo, autorização atual, deduplicação persistente, proteção contra eco e encaminhamento de comandos/áudio ao fluxo nativo.
 
-Em `AGENT_MODE=transport`, a resposta é fixa e não chama modelo. Em `AGENT_MODE=openai`, o agente usa a chave existente e o modelo configurados no servidor. Os testes usam provedor simulado; não houve chamada real à conta OpenAI nesta entrega. Agenda, e-mail, tarefas, finanças e clínica ainda não estão conectados. Veja [modelo, memória e configuração](docs/MODELO-E-MEMORIA.md).
+O modo da ponte usa o modelo e a chave existentes configurados no ambiente privado, sem variáveis Evolution. Comandos e áudio seguem pelo executor nativo já instalado. No transporte Evolution opcional, `AGENT_MODE=transport` mantém resposta fixa e `AGENT_MODE=openai` habilita o motor. Os testes usam provedores simulados; não houve chamada real à conta OpenAI. Agenda, e-mail, tarefas, finanças e clínica não estão conectados ao novo motor. Veja [modelo e memória](docs/MODELO-E-MEMORIA.md).
 
 ## Início rápido
 
@@ -32,7 +35,9 @@ npm run typecheck
 npm test
 ```
 
-Para executar o servidor, siga [instalação e operação](docs/OPERACAO.md): configure uma instância de teste, uma `.env` privada e a allowlist; depois execute `npm start`. Nenhuma chave real é incluída. As variáveis vazias impedem a inicialização.
+Para integrar à instalação atual, siga [APLICAR-NA-PONTE-EXISTENTE.md](docs/APLICAR-NA-PONTE-EXISTENTE.md). Depois de configurar o ambiente privado e confirmar que não há outro controlador usando a sessão, `npm start` ou `npm run start:relay` carrega a ponte existente. Não exige Evolution nem novo QR.
+
+O backend Evolution continua disponível separadamente por `npm run start:evolution`; veja [operação desse modo](docs/OPERACAO.md). Não execute os dois caminhos na mesma conta sem planejar seu roteamento. Nenhuma chave real é incluída.
 
 ## Estrutura
 
@@ -45,6 +50,9 @@ app/
   security.ts              autenticação, HMAC e logs
   store.ts                 reservas e auditoria SQLite
   adapters/evolution.ts    envio de texto
+  adapters/openai.ts       ciclo de modelo com chave existente
+  agent/                   memória cifrada e confirmações
+  relay/                   integração na ponte Codex já instalada
 migrations/                schema persistente
 scripts/hash-phone.ts      geração local do HMAC da allowlist
 tests/                     testes automatizados

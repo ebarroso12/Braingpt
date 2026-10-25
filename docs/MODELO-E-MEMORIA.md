@@ -2,6 +2,8 @@
 
 ## Escolha de credenciais
 
+O motor também pode ser usado diretamente pela ponte Codex existente, sem Evolution; veja [APLICAR-NA-PONTE-EXISTENTE.md](APLICAR-NA-PONTE-EXISTENTE.md). As variáveis AGENT_MODE e EVOLUTION_* descritas para o backend HTTP não são exigidas pelo launcher da ponte.
+
 O proprietário escolheu **usar uma chave OpenAI existente**. Esta entrega não cria chave, não lê credenciais do OpenClaw e não copia valores de outro serviço. O processo lê a chave da variável privada `OPENAI_API_KEY` na implantação. Nenhuma chave real estava disponível neste ambiente, portanto não houve chamada real à OpenAI.
 
 ## Ativação do modo de agente
@@ -58,7 +60,7 @@ As instruções proíbem declarar sucesso sem evidência e a implementação ger
 
 Erro de modelo retorna resposta curta e sanitizada ao solicitante. Não imprime mensagens brutas do provedor. Falhas de envio continuam sem retry cego, conforme OPERACAO.md.
 
-A migração 002 preserva reservas e auditoria da entrega anterior, adicionando tabelas cifradas. Schema atual: versão 2. Para rollback ao código antigo que só conhece versão 1, restaure um backup compatível: não reduza `user_version` manualmente.
+A migração 002 preserva reservas e auditoria da entrega anterior, adicionando tabelas cifradas. A migração 003 adiciona referências de saída da ponte; schema atual: versão 3. Para rollback ao código que só conhece versões anteriores, restaure backup compatível: não reduza `user_version` manualmente.
 
 O prazo do emissor/proxy deve comportar a soma dos timeouts de modelo e Evolution, mais margem. O desligamento espera o ciclo em andamento dentro de prazo; compose usa 65 segundos de tolerância. Isso ainda não é uma fila assíncrona de jobs com recuperação automática.
 

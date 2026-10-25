@@ -1,0 +1,7 @@
+# EXEMPLO, não aplicado. Inspecione a unidade ativa e preserve suas demais opções.
+# Só aplicar à ponte Codex que já possui a sessão, nunca ao OpenClaw.
+[Service]
+ExecStart=
+ExecStart=/usr/bin/node /srv/codex-whatsapp-workspace/Braingpt/app/relay/launch.ts
+EnvironmentFile=/etc/braingpt/relay.env
+TimeoutStopSec=65

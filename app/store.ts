@@ -7,9 +7,10 @@ export function openStateDatabase(path: string): DatabaseSync {
     const db = new DatabaseSync(path);
     db.exec('PRAGMA busy_timeout=5000; PRAGMA journal_mode=WAL; PRAGMA synchronous=FULL;');
     const version = (db.prepare('PRAGMA user_version').get() as any).user_version;
-    if (version > 2) { db.close(); throw new Error('Unsupported database version'); }
+    if (version > 3) { db.close(); throw new Error('Unsupported database version'); }
     if (version === 0) db.exec(readFileSync(new URL('../migrations/001-inbox.sql', import.meta.url), 'utf8'));
     if (version < 2) db.exec(readFileSync(new URL('../migrations/002-agent.sql', import.meta.url), 'utf8'));
+    if (version < 3) db.exec(readFileSync(new URL('../migrations/003-relay.sql', import.meta.url), 'utf8'));
     return db;
 }
 
@@ -44,6 +45,12 @@ export class InboxStore {
       this.db.exec('COMMIT');
     } catch (e) { this.db.exec('ROLLBACK'); throw e; }
   }
+
+  rememberOutgoing(idHash: string) {
+    this.db.prepare('INSERT OR IGNORE INTO relay_outgoing(id_hash,created_at) VALUES(?,?)').run(idHash, Date.now());
+  }
+
+  isOutgoing(idHash: string): boolean { return Boolean(this.db.prepare('SELECT id_hash FROM relay_outgoing WHERE id_hash=?').get(idHash)); }
 
   close() { this.db.close(); }
 }
